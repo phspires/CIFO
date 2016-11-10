@@ -18,7 +18,7 @@ public class GeneticAlgorithm extends SearchMethod {
 	protected Random r;
 	protected Writer outFile;
 	protected boolean crossover_two_points;
-	protected boolean smother_mutations;
+	protected boolean smoother_mutations;
 	protected boolean best_parents;
 	protected int numberOfTriangles;
 
@@ -39,7 +39,7 @@ public class GeneticAlgorithm extends SearchMethod {
 		outFile.setFileName(nameFile);
 		
 		crossover_two_points = Main.CROSSOVER_TWOPOINTS;
-		smother_mutations = Main.SMOTHER_MUTATIONS;
+		smoother_mutations = Main.SMOOTHER_MUTATIONS;
 		best_parents = Main.BEST_PARENTS;
 	
 	}
@@ -86,7 +86,7 @@ public class GeneticAlgorithm extends SearchMethod {
 				}
 				//
 				if (r.nextDouble() <= mutationProbability) {
-					if(smother_mutations){
+					if(smoother_mutations){
 						offspring[k] = offspring[k].applySofterMutation();
 					} else {
 					offspring[k] = offspring[k].applyMutation();
@@ -240,7 +240,7 @@ public class GeneticAlgorithm extends SearchMethod {
 		if (printFileFlag) {
 		
 			int c2p = (crossover_two_points) ? 1 : 0;
-			int sm = (smother_mutations) ? 1 : 0;
+			int sm = (smoother_mutations) ? 1 : 0;
 			int bp = (best_parents) ? 1 : 0;
 			
 			outFile.printLineToFile(
