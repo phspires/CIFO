@@ -5,10 +5,10 @@ import gd.gui.GeneticDrawingApp;
 public class Main {
 
 	protected static int NUMBER_OF_TRIANGLES = 100;
-	protected static int NUMBER_OF_RUNS = 30; 
+	protected static int NUMBER_OF_RUNS = 1; 
 	protected static int NUMBER_OF_GENERATIONS = 50000; 
-	protected static int POPULATION_SIZE = 25;
-	protected static double MUTATION_PROBABILIY = 0.5; 
+	protected static int POPULATION_SIZE = 30;
+	protected static double MUTATION_PROBABILITY = 0.10; 
 	protected static int TOURNAMENT_SIZE = 3; 
 	
 	protected static boolean SMOOTHER_MUTATIONS = false;
@@ -28,7 +28,7 @@ public class Main {
 		    	NUMBER_OF_RUNS = Integer.parseInt(args[0]); // number of Runs
 		    	NUMBER_OF_GENERATIONS = Integer.parseInt(args[1]); // number of Generations
 		    	POPULATION_SIZE = Integer.parseInt(args[2]); // population size
-		    	MUTATION_PROBABILIY = Double.parseDouble(args[3])/100; // mutation probability
+		    	MUTATION_PROBABILITY = Double.parseDouble(args[3])/100; // mutation probability
 		    	TOURNAMENT_SIZE = Integer.parseInt(args[4]); // tournament size		     
 		    	
 		    	int smooth = Integer.parseInt(args[5]); // smoother location
@@ -52,9 +52,10 @@ public class Main {
 	    System.out.println("NUMBER_OF_RUNS is " + NUMBER_OF_RUNS);
 		System.out.println("NUMBER_OF_GENERATIONS is " + NUMBER_OF_GENERATIONS);
 		System.out.println("POPULATION_SIZE is " + POPULATION_SIZE);
-		System.out.println("MUTATION_PROBABILIY is " + MUTATION_PROBABILIY);
+		System.out.println("MUTATION_PROBABILITY is " + MUTATION_PROBABILITY);
 		System.out.println("TOURNAMENT_SIZE is " + TOURNAMENT_SIZE);
 		System.out.println("SMOOTHER_MUTATIONS is " + SMOOTHER_MUTATIONS);
+		System.out.println("BEST_PARENTS is " + BEST_PARENTS);
 		System.out.println("CROSSOVER_TWOPOINTS is " + CROSSOVER_TWOPOINTS);
 		System.out.println("KEEP_WINDOWS_OPEN is " + KEEP_WINDOWS_OPEN);
 		System.out.println("NUMBER_OF_TRIANGLES is " + NUMBER_OF_TRIANGLES);

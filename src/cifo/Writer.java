@@ -11,9 +11,9 @@ import java.util.ArrayList;
 
 public class Writer {
 
-	String fileName = "";
-	protected String directoryName = "C:/CIFO_results/";
-	protected String fileExtension = ".csv";
+	protected String fileName = " ";
+	private static final String directoryName = "C:/CIFO_results/";
+	private static final String fileExtension = ".csv";
 
 	Charset utf8 = StandardCharsets.UTF_8;
 	ArrayList<String> lines = new ArrayList<String>();

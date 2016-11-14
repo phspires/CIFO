@@ -1,5 +1,6 @@
 package cifo;
 
+import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Random;
@@ -26,7 +27,7 @@ public class GeneticAlgorithm extends SearchMethod {
 		instance = new ProblemInstance(Main.NUMBER_OF_TRIANGLES);
 		populationSize = Main.POPULATION_SIZE;
 		numberOfGenerations = Main.NUMBER_OF_GENERATIONS;
-		mutationProbability = Main.MUTATION_PROBABILIY;
+		mutationProbability = Main.MUTATION_PROBABILITY;
 		tournamentSize = Main.TOURNAMENT_SIZE;
 		printFlag = false;
 		printFileFlag = true;
@@ -243,8 +244,7 @@ public class GeneticAlgorithm extends SearchMethod {
 			int sm = (smoother_mutations) ? 1 : 0;
 			int bp = (best_parents) ? 1 : 0;
 			
-			outFile.printLineToFile(
-							new Date().getTime()+";" + 
+			outFile.printLineToFile(new Timestamp(new Date().getTime())+";" + 
 								Main.currentRun+";" + 
 								currentGeneration + ";" + 
 								currentBest.getFitness() + ";" + 
