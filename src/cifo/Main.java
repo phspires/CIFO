@@ -7,10 +7,10 @@ public class Main {
 	protected static int NUMBER_OF_TRIANGLES = 100;
 	protected static int NUMBER_OF_RUNS = 1; 
 	protected static int NUMBER_OF_GENERATIONS = 50000; 
-	protected static int POPULATION_SIZE = 30;
-	protected static double MUTATION_PROBABILITY = 0.10; 
+	protected static int POPULATION_SIZE = 10;
+	protected static double MUTATION_PROBABILITY = 0.9; 
 	protected static int TOURNAMENT_SIZE = 3; 
-	
+			
 	protected static boolean SMOOTHER_MUTATIONS = false;
 	protected static boolean BEST_PARENTS = false;
 	protected static boolean CROSSOVER_TWOPOINTS = false;

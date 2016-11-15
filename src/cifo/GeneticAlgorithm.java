@@ -123,6 +123,8 @@ public class GeneticAlgorithm extends SearchMethod {
 		}
 		return parents;
 	}
+	
+	
 	// seleccionar o melhor "casal"
 	public int[] selectBestParents() {
 		int[] parents = new int[2];
