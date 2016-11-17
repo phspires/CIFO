@@ -258,6 +258,17 @@ public class GeneticAlgorithm extends SearchMethod {
 								sm + ";" +
 								bp
 								);
+			Main.data_base.insertResult("now()," + 
+								Main.currentRun+"," + 
+								currentGeneration + "," + 
+								currentBest.getFitness() + "," + 
+								populationSize + "," + 
+								tournamentSize + "," +
+								mutationProbability + "," +
+								numberOfTriangles + "," +
+								c2p + "," +
+								sm + "," +
+								bp);
 		}		
 	}
 }
