@@ -124,26 +124,34 @@ public class GeneticAlgorithm extends SearchMethod {
 		return parents;
 	}
 	
+	// roulette wheel via stochastic acceptance
+	public int[] selectParentsRW() {
+		return null;
+		
+	}
 	
 	// seleccionar o melhor "casal"
 	public int[] selectBestParents() {
 		int[] parents = new int[2];
 
 		//best parent
+		int minFitPosition = 0;
 		for (int i = 0; i < populationSize; i++) {
-			Solution temp = population[0];
-			if (temp.getFitness() < population[i].getFitness()) {
-				parents[0] = i;
+			if (population[i].getFitness() < population[minFitPosition].getFitness()) {
+				minFitPosition = i;
 			}
 		}
-
-		//second best parent
+		parents[0] = minFitPosition;
+		
+		//second best parent(excluding first parent ) 
+		minFitPosition = 0;
 		for (int i = 0; i < populationSize; i++) {
-			Solution temp = population[0];
-			if (temp.getFitness() < population[i].getFitness() && parents[0] != i) {
-				parents[1] = i;
+			if (population[i].getFitness() < population[minFitPosition].getFitness() && minFitPosition != parents[0]) {
+				minFitPosition = i;
 			}
 		}
+		parents[1] = minFitPosition;
+		
 		return parents;
 	}	
 

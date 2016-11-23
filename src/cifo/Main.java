@@ -6,7 +6,7 @@ public class Main {
 
 	protected static int NUMBER_OF_TRIANGLES = 100;
 	protected static int NUMBER_OF_RUNS = 50000; 
-	protected static int NUMBER_OF_GENERATIONS = 50000; 
+	protected static int NUMBER_OF_GENERATIONS = 2000; 
 	protected static int POPULATION_SIZE = 10;
 	protected static double MUTATION_PROBABILITY = 0.9; 
 	protected static int TOURNAMENT_SIZE = 3; 
@@ -15,19 +15,21 @@ public class Main {
 	protected static boolean BEST_PARENTS = false;
 	protected static boolean CROSSOVER_TWOPOINTS = false;
 	
-	public static boolean KEEP_WINDOWS_OPEN = false;
+	public static boolean KEEP_WINDOWS_OPEN = true;
+	public static boolean USE_OF_DB=true;
 	
 	public static Solution[] bestSolutions = new Solution[NUMBER_OF_RUNS];
 	public static double[] bestFitness = new double[NUMBER_OF_RUNS];
 	public static int currentRun = 0;
 	public static DB data_base = new DB();
 	public static Double[] data_base_initial = new Double[50];
-	protected static int id_database = 0;
+	protected static int id_database = 1;
 	public static void main(String[] args) {		
 
-		if	(args.length == 1 && Integer.parseInt(args[0]) == 11) {
+		if	((args.length == 1 && Integer.parseInt(args[0]) == 11) || USE_OF_DB == true) {
 			data_base.createDBconection();
 			data_base_initial = data_base.selectNextRun();
+			System.out.println("Database:" + data_base_initial);
 			if(data_base_initial != null){
 	    	NUMBER_OF_RUNS = data_base_initial[0].intValue(); // number of Runs
 	    	NUMBER_OF_GENERATIONS = data_base_initial[1].intValue(); // number of Generations

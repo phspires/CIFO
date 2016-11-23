@@ -2,11 +2,8 @@ package cifo;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
-import java.sql.Statement;
-import java.sql.Timestamp;
-import java.text.SimpleDateFormat;
-import java.util.Date;
 import java.sql.ResultSet;
+import java.sql.Statement;
 
 public class DB {
 	protected static Connection db_conection;
@@ -16,9 +13,6 @@ public class DB {
 			      
 			    
 	}//end main
-	
-	
-	
 	
 	public void createDBconection(){
 		  try {

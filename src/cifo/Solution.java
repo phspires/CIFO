@@ -62,13 +62,11 @@ public class Solution {
 			int red = ((c1 >> 16) & 0xff) - ((c2 >> 16) & 0xff);
 			int green = ((c1 >> 8) & 0xff) - ((c2 >> 8) & 0xff);
 			int blue = (c1 & 0xff) - (c2 & 0xff);
-			//sum += red * red + green * green + blue * blue;
-			//sum+=Math.pow(2, red) + Math.pow(2, green) + Math.pow(2, blue);
-			sum+=Math.pow(red,4) + Math.pow(green,4) + Math.pow(blue,4);
+			sum += red * red + green * green + blue * blue;
+		
 		}
 		//sqrt of sum of square difference of the colors
-		//fitness = Math.sqrt(sum)
-		fitness = sum;
+		fitness = Math.sqrt(sum);
 	}
 	
 	// baseline mutation
