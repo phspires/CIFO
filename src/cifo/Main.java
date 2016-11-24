@@ -23,7 +23,7 @@ public class Main {
 	protected static boolean CROSSOVER_TWOPOINTS = false;
 	
 	public static boolean KEEP_WINDOWS_OPEN = false;
-	public static boolean USE_OF_DB=false;
+	public static boolean USE_OF_DB=true;
 	
 	public static Solution[] bestSolutions = new Solution[NUMBER_OF_RUNS];
 	public static double[] bestFitness = new double[NUMBER_OF_RUNS];
@@ -142,7 +142,7 @@ public class Main {
 		System.out.printf("\n\t\tMean +- std dev\t\tBest\t\tWorst\n\n");
 		System.out.printf("Results\t\t%.2f +- %.2f\t%.2f\t%.2f\n", mean, stdDev, best, worst);
 		
-		if(id_database > 1) {
+		if(USE_OF_DB) {
 			String query = "";
 			query = String.format("mean=%.2f, \"stdDev\"=%.2f,best=%.2f, "
 					+ "worst=%.2f,datetime_end='now()',state='confirmed'"
