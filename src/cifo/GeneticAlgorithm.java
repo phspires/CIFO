@@ -21,6 +21,7 @@ public class GeneticAlgorithm extends SearchMethod {
 	protected boolean crossover_two_points;
 	protected boolean smoother_mutations;
 	protected boolean best_parents;
+	protected boolean allowrepeated;
 	protected int numberOfTriangles;
 
 	public GeneticAlgorithm() {
@@ -125,12 +126,33 @@ public class GeneticAlgorithm extends SearchMethod {
 	}
 	
 	// roulette wheel via stochastic acceptance
-	public int[] selectParentsRW() {
-		return null;
-		
+	// yet to implements
+
+	// Returns the selected index based on the weights(probabilities)
+	int rouletteSelect(double[] weight) {
+		// calculate the total weight
+		double weight_sum = 0;
+		for(int i=0; i<weight.length; i++) {
+			weight_sum += weight[i];
+		}
+		// get a random value
+		double value = randUniformPositive() * weight_sum;	
+		// locate the random value based on the weights
+		for(int i=0; i<weight.length; i++) {		
+			value -= weight[i];		
+			if(value <= 0) return i;
+		}
+		// when rounding errors occur, we return the last item's index 
+		return weight.length - 1;
+	}
+
+	// Returns a uniformly distributed double value between 0.0 and 1.0
+	double randUniformPositive() {
+		// easiest implementation
+		return new Random().nextDouble();
 	}
 	
-	// seleccionar o melhor "casal"
+	//seleccionar o melhor "casal"
 	public int[] selectBestParents() {
 		int[] parents = new int[2];
 

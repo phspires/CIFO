@@ -2,10 +2,16 @@ package cifo;
 
 import java.awt.Color;
 import java.awt.Graphics;
+import java.awt.Image;
 import java.awt.Polygon;
 import java.awt.image.BufferedImage;
 import java.awt.image.PixelGrabber;
+import java.awt.image.RenderedImage;
+import java.io.File;
+import java.io.IOException;
 import java.util.Random;
+
+import javax.imageio.ImageIO;
 
 public class Solution {
 
@@ -15,6 +21,8 @@ public class Solution {
 	protected int[] values;
 	protected double fitness;
 	protected Random r;
+
+	private BufferedImage solutionImage;
 
 	public Solution(ProblemInstance instance) {
 		this.instance = instance;
@@ -45,6 +53,7 @@ public class Solution {
 	//and compare
 	public void evaluate() {
 		BufferedImage generatedImage = createImage();
+		setSolutionImage(generatedImage);
 		int[] generatedPixels = new int[generatedImage.getWidth() * generatedImage.getHeight()];
 		PixelGrabber pg = new PixelGrabber(generatedImage, 0, 0, generatedImage.getWidth(), generatedImage.getHeight(),
 				generatedPixels, 0, generatedImage.getWidth());
@@ -53,7 +62,7 @@ public class Solution {
 		} catch (InterruptedException e) {
 			e.printStackTrace();
 		}
-
+		
 		int[] targetPixels = instance.getTargetPixels();
 		long sum = 0;
 		for (int i = 0; i < targetPixels.length; i++) {
@@ -63,7 +72,6 @@ public class Solution {
 			int green = ((c1 >> 8) & 0xff) - ((c2 >> 8) & 0xff);
 			int blue = (c1 & 0xff) - (c2 & 0xff);
 			sum += red * red + green * green + blue * blue;
-		
 		}
 		//sqrt of sum of square difference of the colors
 		fitness = Math.sqrt(sum);
@@ -296,4 +304,13 @@ public class Solution {
 				getYFromVertex3(triangleIndex) };
 		return new Polygon(xs, ys, 3);
 	}
+
+	public BufferedImage getSolutionImage() {
+		return solutionImage;
+	}
+
+	public void setSolutionImage(BufferedImage solutionImage) {
+		this.solutionImage = solutionImage;
+	}
+	
 }

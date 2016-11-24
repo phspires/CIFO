@@ -1,29 +1,39 @@
 package cifo;
 
+import java.awt.Image;
+import java.awt.image.RenderedImage;
+import java.io.File;
+import java.io.IOException;
+
+import javax.imageio.ImageIO;
+
 import gd.gui.GeneticDrawingApp;
 
 public class Main {
 
 	protected static int NUMBER_OF_TRIANGLES = 100;
-	protected static int NUMBER_OF_RUNS = 50000; 
+	protected static int NUMBER_OF_RUNS = 5; 
 	protected static int NUMBER_OF_GENERATIONS = 2000; 
-	protected static int POPULATION_SIZE = 10;
+	protected static int POPULATION_SIZE = 25;
 	protected static double MUTATION_PROBABILITY = 0.9; 
-	protected static int TOURNAMENT_SIZE = 3; 
+	protected static int TOURNAMENT_SIZE = 7; 
 			
-	protected static boolean SMOOTHER_MUTATIONS = false;
-	protected static boolean BEST_PARENTS = false;
-	protected static boolean CROSSOVER_TWOPOINTS = false;
+	protected static boolean SMOOTHER_MUTATIONS = true;
+	protected static boolean BEST_PARENTS = true;
+	protected static boolean CROSSOVER_TWOPOINTS = true;
 	
-	public static boolean KEEP_WINDOWS_OPEN = true;
-	public static boolean USE_OF_DB=true;
+	public static boolean KEEP_WINDOWS_OPEN = false;
+	public static boolean USE_OF_DB=false;
 	
 	public static Solution[] bestSolutions = new Solution[NUMBER_OF_RUNS];
 	public static double[] bestFitness = new double[NUMBER_OF_RUNS];
 	public static int currentRun = 0;
 	public static DB data_base = new DB();
 	public static Double[] data_base_initial = new Double[50];
-	protected static int id_database = 1;
+	protected static int id_database = 0;
+	
+	protected static boolean ALLOW_REPEATED = false;
+	
 	public static void main(String[] args) {		
 
 		if	((args.length == 1 && Integer.parseInt(args[0]) == 11) || USE_OF_DB == true) {
@@ -37,7 +47,7 @@ public class Main {
 	    	MUTATION_PROBABILITY = data_base_initial[3]; // mutation probability
 	    	TOURNAMENT_SIZE = data_base_initial[4].intValue(); // tournament size		     
 	    	
-	    	int smooth = data_base_initial[5].intValue(); // smoother location
+	    	int smooth = data_base_initial[5].intValue(); // smoother mutation
 	        int bestPar = data_base_initial[6].intValue(); // best parents
 	        int xOver2 = data_base_initial[7].intValue(); // xover 2 points	
 	        int windOpen = data_base_initial[8].intValue(); // windows open
@@ -104,6 +114,9 @@ public class Main {
 		bestSolutions[currentRun] = bestSolution;
 		bestFitness[currentRun] = bestSolution.getFitness();
 		System.out.printf("Got %.2f as a result for run %d\n", bestFitness[currentRun], currentRun + 1);
+		
+		saveImageToFile(bestSolution.getSolutionImage(), Main.id_database, Main.currentRun);
+		
 		System.out.print("All runs:");
 		for (int i = 0; i <= currentRun; i++) {
 			System.out.printf("\t%.2f", bestFitness[i]);
@@ -112,7 +125,7 @@ public class Main {
 		currentRun++;
 		if (KEEP_WINDOWS_OPEN == false) {
 			ProblemInstance.view.getFittestDrawingView().dispose();
-			ProblemInstance.view.getFrame().dispose();
+			ProblemInstance.view.getFrame().dispose();	
 		}
 		if (currentRun < NUMBER_OF_RUNS) {
 			run();
@@ -120,7 +133,7 @@ public class Main {
 			presentResults();
 		}
 	}
-
+	
 	public static void presentResults() {
 		double mean = Statistics.mean(bestFitness);
 		double stdDev = Statistics.standardDeviation(bestFitness);
@@ -138,7 +151,16 @@ public class Main {
 			data_base.closeConection();
 		}
 	}
-
+	
+	public static void saveImageToFile(Image image, int test_id, int runNum) {
+		File file = new File("Test_"+test_id+"_run_"+runNum+".png");
+		try {
+			ImageIO.write((RenderedImage) image, "PNG", file);
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
+	
 	public static void run() {
 		GeneticDrawingApp.main(null);
 	}
