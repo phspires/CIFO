@@ -89,7 +89,7 @@ public class GeneticAlgorithm extends SearchMethod {
 				//
 				if (r.nextDouble() <= mutationProbability) {
 					if(smoother_mutations){
-						offspring[k] = offspring[k].applySofterMutation(5, 5,10);
+						offspring[k] = offspring[k].applySofterMutation(10, 5,1);
 					} else {
 					offspring[k] = offspring[k].applyMutation(1);
 					}
