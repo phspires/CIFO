@@ -15,12 +15,12 @@ public class Main {
 	protected static int NUMBER_OF_RUNS = 5; 
 	protected static int NUMBER_OF_GENERATIONS = 2000; 
 	protected static int POPULATION_SIZE = 25;
-	protected static double MUTATION_PROBABILITY = 0.9; 
+	protected static double MUTATION_PROBABILITY = 0.8; 
 	protected static int TOURNAMENT_SIZE = 7; 
 			
 	protected static boolean SMOOTHER_MUTATIONS = true;
-	protected static boolean BEST_PARENTS = true;
-	protected static boolean CROSSOVER_TWOPOINTS = true;
+	protected static boolean BEST_PARENTS = false;
+	protected static boolean CROSSOVER_TWOPOINTS = false;
 	
 	public static boolean KEEP_WINDOWS_OPEN = false;
 	public static boolean USE_OF_DB=false;

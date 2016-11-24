@@ -2,16 +2,10 @@ package cifo;
 
 import java.awt.Color;
 import java.awt.Graphics;
-import java.awt.Image;
 import java.awt.Polygon;
 import java.awt.image.BufferedImage;
 import java.awt.image.PixelGrabber;
-import java.awt.image.RenderedImage;
-import java.io.File;
-import java.io.IOException;
 import java.util.Random;
-
-import javax.imageio.ImageIO;
 
 public class Solution {
 
@@ -32,8 +26,8 @@ public class Solution {
 
 	public void initialize() {
 		values = new int[instance.getNumberOfTriangles() * VALUES_PER_TRIANGLE];
-		//initialize array of values
-		
+		// initialize array of values
+
 		for (int triangleIndex = 0; triangleIndex < instance.getNumberOfTriangles(); triangleIndex++) {
 			// initialize HSB and Alpha
 			// generate for values for the colors
@@ -48,9 +42,10 @@ public class Solution {
 			}
 		}
 	}
-	//computes the fitness
-	//translate triangles to images
-	//and compare
+
+	// computes the fitness
+	// translate triangles to images
+	// and compare
 	public void evaluate() {
 		BufferedImage generatedImage = createImage();
 		setSolutionImage(generatedImage);
@@ -62,86 +57,118 @@ public class Solution {
 		} catch (InterruptedException e) {
 			e.printStackTrace();
 		}
-		
+
 		int[] targetPixels = instance.getTargetPixels();
 		long sum = 0;
 		for (int i = 0; i < targetPixels.length; i++) {
 			int c1 = targetPixels[i];
 			int c2 = generatedPixels[i];
 			int red = ((c1 >> 16) & 0xff) - ((c2 >> 16) & 0xff);
+			// erro do vermelho
 			int green = ((c1 >> 8) & 0xff) - ((c2 >> 8) & 0xff);
+			// erro de verde
 			int blue = (c1 & 0xff) - (c2 & 0xff);
+			// erro de azul
 			sum += red * red + green * green + blue * blue;
 		}
-		//sqrt of sum of square difference of the colors
+		// sqrt of sum of square difference of the colors
 		fitness = Math.sqrt(sum);
 	}
-	
+
 	// baseline mutation
-	public Solution applyMutation() {
-		
+	public Solution applyMutation(int nTriangles) {
+
 		Solution temp = this.copy();
-		//choose random triangle
-		int triangleIndex = r.nextInt(instance.getNumberOfTriangles());
-		//choose random value
-		int valueIndex = r.nextInt(VALUES_PER_TRIANGLE);
-		if (valueIndex < 4) { // is color
-			temp.values[triangleIndex * VALUES_PER_TRIANGLE + valueIndex] = r.nextInt(256);
-		} else {
-			if (valueIndex % 2 == 0) { // position
-				temp.values[triangleIndex * VALUES_PER_TRIANGLE + valueIndex] = r.nextInt(instance.getImageWidth() + 1);
+		for (int i = 0; i < nTriangles; i++) {
+			// choose random triangle
+			int triangleIndex = r.nextInt(instance.getNumberOfTriangles());
+			// choose random value
+			int valueIndex = r.nextInt(VALUES_PER_TRIANGLE);
+			if (valueIndex < 4) { // is color
+				temp.values[triangleIndex * VALUES_PER_TRIANGLE + valueIndex] = r.nextInt(256);
 			} else {
-				temp.values[triangleIndex * VALUES_PER_TRIANGLE + valueIndex] = r
-						.nextInt(instance.getImageHeight() + 1);
+				if (valueIndex % 2 == 0) { // position
+					temp.values[triangleIndex * VALUES_PER_TRIANGLE + valueIndex] = r
+							.nextInt(instance.getImageWidth() + 1);
+				} else {
+					temp.values[triangleIndex * VALUES_PER_TRIANGLE + valueIndex] = r
+							.nextInt(instance.getImageHeight() + 1);
+				}
 			}
 		}
 		return temp;
 	}
 
-	public Solution applySofterMutation() {
-		
-		Solution temp = this.copy();
-		//choose random triangle
-		
-		int triangleIndex = r.nextInt(instance.getNumberOfTriangles());
-		int valueIndex = r.nextInt(VALUES_PER_TRIANGLE);
-		int val = temp.getValue(triangleIndex * VALUES_PER_TRIANGLE + valueIndex);
+	public Solution applySofterMutation(int hsbValue, int positionValue, int nTriangles) {
 
-		if (valueIndex < 4) { // change color 10 values
-			//temp.values[triangleIndex * VALUES_PER_TRIANGLE + valueIndex] = r.nextInt(256);
-			
-			if(r.nextBoolean()) {
-				if(val+10<255) {
-				temp.values[triangleIndex * VALUES_PER_TRIANGLE + valueIndex] = val+10;
-				} else 
-					temp.values[triangleIndex * VALUES_PER_TRIANGLE + valueIndex] = val+10-255;
+		Solution temp = this.copy();
+
+		for (int i = 0; i < nTriangles; i++) {
+			// choose random triangle
+			int triangleIndex = r.nextInt(instance.getNumberOfTriangles());
+			int valueIndex = r.nextInt(VALUES_PER_TRIANGLE);
+			int val = temp.getValue(triangleIndex * VALUES_PER_TRIANGLE + valueIndex);
+
+			if (valueIndex < 4) { // change color 10 values
+				// temp.values[triangleIndex * VALUES_PER_TRIANGLE + valueIndex]
+				// = r.nextInt(256);
+
+				if (r.nextBoolean()) {
+					if (val + hsbValue < 255) {
+						temp.values[triangleIndex * VALUES_PER_TRIANGLE + valueIndex] = val + hsbValue;
+					} else
+						temp.values[triangleIndex * VALUES_PER_TRIANGLE + valueIndex] = val + hsbValue - 255;
 				}
-			//decresce 10
-			else {	
-				if(val-10>=0) {
-				temp.values[triangleIndex * VALUES_PER_TRIANGLE + valueIndex] = val-10;
-				} else 
-					temp.values[triangleIndex * VALUES_PER_TRIANGLE + valueIndex] = val-10+255;
+				// decresce 10
+				else {
+					if (val - hsbValue >= 0) {
+						temp.values[triangleIndex * VALUES_PER_TRIANGLE + valueIndex] = val - hsbValue;
+					} else
+						temp.values[triangleIndex * VALUES_PER_TRIANGLE + valueIndex] = val - hsbValue + 255;
 				}
-			}	else {		
-			//if (valueIndex % 2 == 0) { // change position 20 pixels				
-				if(r.nextBoolean()) {
-					if(val + 20 <= instance.getImageWidth())
-						temp.values[triangleIndex * VALUES_PER_TRIANGLE + valueIndex] = val + 20;
-					else 
-						temp.values[triangleIndex * VALUES_PER_TRIANGLE + valueIndex] = val + 20 - instance.getImageWidth();
-					
+			} else {
+				// if (valueIndex % 2 == 0) { // change position 20 pixels
+				if (r.nextBoolean()) {
+					if (val + positionValue <= instance.getImageWidth())
+						temp.values[triangleIndex * VALUES_PER_TRIANGLE + valueIndex] = val + positionValue;
+					else
+						temp.values[triangleIndex * VALUES_PER_TRIANGLE + valueIndex] = val + positionValue
+								- instance.getImageWidth();
+
 				} else {
-					if(val - 20 >= 0)
-						temp.values[triangleIndex * VALUES_PER_TRIANGLE + valueIndex] = val - 20;
-					else 
-						temp.values[triangleIndex * VALUES_PER_TRIANGLE + valueIndex] = val - 20 + instance.getImageWidth();
+					if (val - positionValue >= 0)
+						temp.values[triangleIndex * VALUES_PER_TRIANGLE + valueIndex] = val - positionValue;
+					else
+						temp.values[triangleIndex * VALUES_PER_TRIANGLE + valueIndex] = val - positionValue
+								+ instance.getImageWidth();
 				}
-				
+
+			}
 		}
 		return temp;
-	}	
-	
+	}
+
+	public Solution applyColorMutation() {
+		Solution temp = this.copy();
+		/*
+		 * for every triangle in temp set value of Hue set value of Saturation
+		 * set value of Brightness set value of Alpha
+		 * 
+		 */
+		return temp;
+	}
+
+	public Solution applyPositionMutation() {
+		Solution temp = this.copy();
+		/*
+		 * for every triangle in temp set valueXvertice1 set valueYvertice1 set
+		 * valueXvertice2 set valueYvertice2 set valueXvertice3 set
+		 * valueYvertice4
+		 * 
+		 */
+		return temp;
+	}
+
 	public void draw() {
 		BufferedImage generatedImage = createImage();
 		Graphics g = ProblemInstance.view.getFittestDrawingView().getMainPanel().getGraphics();
@@ -312,5 +339,5 @@ public class Solution {
 	public void setSolutionImage(BufferedImage solutionImage) {
 		this.solutionImage = solutionImage;
 	}
-	
+
 }
