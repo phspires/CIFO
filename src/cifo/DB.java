@@ -7,7 +7,7 @@ import java.sql.Statement;
 
 public class DB {
 	protected static Connection db_conection;
-	protected static String inserts_results = "";
+	private static String inserts_results = "";
 	protected Writer outFile;
 	public static void main() {
 			      
@@ -110,38 +110,39 @@ public class DB {
         		+ "(order_id,name,\"currentRun\",\"currentGeneration\",fitness,\"populationSize\",\"tournamentSize\","
         		+ "\"mutationProbability\",\"numberOfTriangles\",c2p,sm,bp) "
         		+ "VALUES (" + Main.id_database + "," + update_params + ");";
-		inserts_results += query;
+		setInserts_results(getInserts_results() + query);
 	}
 	
 	
-	public void insertResultsDB(String update_query) {
+	public void insertResultsDB() {
 	    Statement stmt = null;
 	    String query = "";
 	    try {
 		stmt = db_conection.createStatement();
-		query =update_query;
+		query = getInserts_results();
         ResultSet rs = stmt.executeQuery(query);
         rs.close();
         stmt.close();
         
 	    } catch ( Exception e ) {
-	         System.err.println( e.getClass().getName()+": "+ e.getMessage());
+			outFile = new Writer();
+			String nameFile = "Test_" + Main.id_database + "_run_"+ Main.currentRun + "_insertResults";	
+			outFile.setFileName(nameFile);
+			outFile.printLineToFile(query);
+	        System.err.println( e.getClass().getName()+": "+ e.getMessage());
 	       }
 	}
 	public void updateFinalResult(String update_params) {
 		
-		try {
+	/*	try {
 			
-			insertResultsDB(inserts_results);
-			inserts_results = "";
+			insertResultsDB();
+
 		} catch ( Exception e ) {
-			outFile = new Writer();
-			String nameFile = "Test_" + Main.id_database + "_run_"+ Main.currentRun + "_insertResults";	
-			outFile.setFileName(nameFile);
-			outFile.printLineToFile(inserts_results);
+
 	        System.err.println( e.getClass().getName()+": "+ e.getMessage());
-	    }
-		
+	    }*/
+
 	    Statement stmt = null;
 	    String query = "";
 	    try {
@@ -154,9 +155,17 @@ public class DB {
 			outFile = new Writer();
 			String nameFile = "Test_" + Main.id_database + "_updateResults";	
 			outFile.setFileName(nameFile);
-			outFile.printLineToFile(inserts_results);
+			outFile.printLineToFile(query);
 	         System.err.println( e.getClass().getName()+": "+ e.getMessage() + query);
 	       }
+	}
+
+	public static String getInserts_results() {
+		return inserts_results;
+	}
+
+	public static void setInserts_results(String inserts_results) {
+		DB.inserts_results = inserts_results;
 	}
 	
 }//end JDBCExample
