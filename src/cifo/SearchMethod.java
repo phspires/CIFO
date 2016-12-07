@@ -7,7 +7,7 @@ import org.jfree.data.xy.XYSeriesCollection;
 public abstract class SearchMethod implements Runnable {
 
 	protected XYSeries series;
-
+	
 	public SearchMethod() {
 		JFreeChart chart = ProblemInstance.view.getChart();
 		XYSeriesCollection sc = (XYSeriesCollection) chart.getXYPlot().getDataset();

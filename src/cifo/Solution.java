@@ -14,7 +14,9 @@ public class Solution {
 	protected ProblemInstance instance;
 	protected int[] values;
 	protected double fitness;
+	protected double shared_fitness;
 	protected Random r;
+	protected double sharingCoefficient;
 
 	private BufferedImage solutionImage;
 
@@ -48,7 +50,9 @@ public class Solution {
 	// and compare
 	public void evaluate() {
 		BufferedImage generatedImage = createImage();
+
 		setSolutionImage(generatedImage);
+
 		int[] generatedPixels = new int[generatedImage.getWidth() * generatedImage.getHeight()];
 		PixelGrabber pg = new PixelGrabber(generatedImage, 0, 0, generatedImage.getWidth(), generatedImage.getHeight(),
 				generatedPixels, 0, generatedImage.getWidth());
@@ -59,6 +63,7 @@ public class Solution {
 		}
 
 		int[] targetPixels = instance.getTargetPixels();
+
 		long sum = 0;
 		for (int i = 0; i < targetPixels.length; i++) {
 			int c1 = targetPixels[i];
@@ -73,6 +78,7 @@ public class Solution {
 		}
 		// sqrt of sum of square difference of the colors
 		fitness = Math.sqrt(sum);
+		shared_fitness = fitness;
 	}
 
 	// baseline mutation
@@ -133,20 +139,43 @@ public class Solution {
 						temp.values[triangleIndex * VALUES_PER_TRIANGLE + valueIndex] = val + positionValue;
 					else
 						temp.values[triangleIndex * VALUES_PER_TRIANGLE + valueIndex] = val + positionValue
-								- instance.getImageWidth();
+						- instance.getImageWidth();
 
 				} else {
 					if (val - positionValue >= 0)
 						temp.values[triangleIndex * VALUES_PER_TRIANGLE + valueIndex] = val - positionValue;
 					else
 						temp.values[triangleIndex * VALUES_PER_TRIANGLE + valueIndex] = val - positionValue
-								+ instance.getImageWidth();
+						+ instance.getImageWidth();
 				}
 
 			}
 		}
 		return temp;
 	}
+
+	public int computeManhattanDistance(Solution otherSolution) {
+		int distance = 0;
+		for (int i = 0; i < values.length; i++) {
+			distance += Math.abs(values[i] - otherSolution.values[i]);
+		}
+		return distance;
+	}
+
+	public double computeEuclidianDistance(Solution otherSolution){
+		double sumSqrErrors=0.0;
+		double error = 0.0;
+		for (int i = 0; i < values.length; i++) {
+			error= Math.abs(values[i] - otherSolution.values[i]);
+			sumSqrErrors += error*error;
+		}
+		//System.out.println(sumSqrErrors);
+		return Math.sqrt(sumSqrErrors);
+	}
+
+	public double computeFitnessDistance(Solution otherSolution) {
+		return Math.abs(fitness - otherSolution.getFitness());
+	}	
 
 	public Solution applyColorMutation() {
 		Solution temp = this.copy();
@@ -291,6 +320,10 @@ public class Solution {
 		return fitness;
 	}
 
+	public double getSharedFitness() {
+		return shared_fitness;
+	}
+
 	public Solution copy() {
 		Solution temp = new Solution(instance);
 		for (int i = 0; i < values.length; i++) {
@@ -338,6 +371,10 @@ public class Solution {
 
 	public void setSolutionImage(BufferedImage solutionImage) {
 		this.solutionImage = solutionImage;
+	}
+
+	public void setSharingFitness(double newFitness) {
+		shared_fitness = newFitness;
 	}
 
 }
